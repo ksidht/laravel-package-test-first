@@ -22,23 +22,23 @@ class UserController extends Controller
 
         // if search keywork is present
         if ($request->keyword) {
-            $user_query->where('name','LIKE','%'. $request->keyword.'%');
+            $user_query->where('name', 'LIKE', '%' . $request->keyword . '%');
         }
 
         // if sort is present.',
-        if ($request->sortBy && in_array($request->sortBy, ['id', 'created_at'])){
+        if ($request->sortBy && in_array($request->sortBy, ['id', 'created_at'])) {
             $sortBy = $request->sortBy;
         } else {
             $sortBy = 'id';
         }
 
         // if sortOrder is present.',
-        if ($request->sortOrder && in_array($request->sortOrder, ['asc', 'desc'])){
+        if ($request->sortOrder && in_array($request->sortOrder, ['asc', 'desc'])) {
             $sortOrder = $request->sortOrder;
         } else {
             $sortOrder = 'desc';
         }
-        
+
         // if perPage is present
         if ($request->perPage) {
             $perPage = $request->perPage;
@@ -57,16 +57,16 @@ class UserController extends Controller
 
         // if paginate is present
         if ($request->paginate) {
-            $user = $user_query->orderBy($sortBy,$sortOrder)->paginate($perPage);
+            $user = $user_query->orderBy($sortBy, $sortOrder)->paginate($perPage);
         } else if ($request->simplePaginate) {
-            $user = $user_query->orderBy($sortBy,$sortOrder)->simplePaginate($perPage);
+            $user = $user_query->orderBy($sortBy, $sortOrder)->simplePaginate($perPage);
         } else {
-            $user = $user_query->orderBy($sortBy,$sortOrder)->get();
+            $user = $user_query->orderBy($sortBy, $sortOrder)->get();
         }
 
-        
+
         // return response()->success($user);
-        return view('adminusers.index',compact('user'));
+        return view('adminusers.index', compact('user'));
     }
 
     /**
@@ -87,20 +87,18 @@ class UserController extends Controller
      */
     public function store(StoreValRequest $request)
     {
-        dd($request->validated());
         DB::beginTransaction();
         try {
             $userData = User::create($request->validated());
             DB::commit();
 
             return redirect()->route('user.index');
-            
+
             // return response()->success($userData);
         } catch (\Throwable $th) {
             DB::rollback();
-            return response()->error($th,500);
+            return response()->error($th, 500);
         }
-        
     }
 
     /**
@@ -122,7 +120,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('user.edit',compact('user'));
+        return view('adminusers.edit', compact('user'));
     }
 
     /**
@@ -142,9 +140,8 @@ class UserController extends Controller
             return redirect()->route('user.index');
         } catch (\Throwable $th) {
             DB::rollback();
-            return response()->error($th,500);
+            return response()->error($th, 500);
         }
-        
     }
 
     /**
@@ -163,8 +160,7 @@ class UserController extends Controller
             return redirect()->route('user.index');
         } catch (\Throwable $th) {
             DB::rollback();
-            return response()->error($th,500);
+            return response()->error($th, 500);
         }
-        
     }
 }
