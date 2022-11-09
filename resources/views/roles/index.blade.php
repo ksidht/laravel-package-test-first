@@ -12,11 +12,11 @@
 <div class="flex-1 py-9 px-6">
   <div>
     <h2 class="text-3xl font-extrabold dark:text-white my-8">
-      Users
+      Roles
     </h2>
 
     <div class="flex justify-between">
-      <form action={{ route('users.index') }}>
+      <form action={{ route('roles.index') }}>
         <div class="flex">
           <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Your Email</label>
           <button 
@@ -39,21 +39,21 @@
             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
               <li>
                 <a 
-                  href={{ route('users.index') }} 
+                  href={{ route('roles.index') }} 
                   class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                   <br>
                 </a>
               </li>
               <li>
                 <a 
-                  href={{ route('users.index')."?trashed=with" }} 
+                  href={{ route('roles.index')."?trashed=with" }} 
                   class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                   With Trashed
                 </a>
               </li>
               <li>
                 <a 
-                  href={{ route('users.index')."?trashed=only" }} 
+                  href={{ route('roles.index')."?trashed=only" }} 
                   class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                   Only Trashed
                 </a>
@@ -83,7 +83,7 @@
       <button 
         type="button" 
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-        <a href={{ route('users.create') }}>Create</a>
+        <a href={{ route('roles.create') }}>Create</a>
       </button>
     </div>
 
@@ -92,37 +92,36 @@
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" class="py-3 px-6">Name</th>
-            <th scope="col" class="py-3 px-6">Position</th>
+            <th scope="col" class="py-3 px-6">Slug</th>
             <th scope="col" class="py-3 px-6">Status</th>
             <th scope="col" class="py-3 px-6">Action</th>
           </tr>
         </thead>
         <tbody id="content">
-          @foreach ($users as $user)
+          @foreach ($roles as $role)
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
             <th scope="row" class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white">
-              <img class="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" alt="Jese image" />
               <div class="pl-3">
-                <div class="text-base font-semibold">{{ $user->name }}</div>
+                <div class="text-base font-semibold">{{ $role->name }}</div>
                 <div class="font-normal text-gray-500">
-                  {{ $user->email }}
+                  {{ $role->email }}
                 </div>
               </div>
             </th>
-            <td class="py-4 px-6">React Developer</td>
+            <td class="py-4 px-6">{{ $role->slug }}</td>
             <td class="py-4 px-6">
               <div class="flex items-center">
-                <div class="h-2.5 w-2.5 rounded-full {{ $user->deleted_at == null ? 'bg-green-400' : 'bg-red-400' }}  mr-2"></div>
-                {{ $user->deleted_at == null ? 'Active' : 'Deactive' }}
+                <div class="h-2.5 w-2.5 rounded-full {{ $role->deleted_at == null ? 'bg-green-400' : 'bg-red-400' }}  mr-2"></div>
+                {{ $role->deleted_at == null ? 'Active' : 'Deactive' }}
               </div>
             </td>
             <td class="py-4 px-6">
-              <a href={{ route('users.edit',$user->id) }} class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
+              <a href={{ route('roles.edit', $role->id) }} class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit role</a>
             </td>
           </tr>
           @endforeach
 
-          @if (count($users) === 0)
+          @if (count($roles) === 0)
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
             <th class="py-4 px-6" colspan="4">No data found</th>
           </tr>
@@ -132,7 +131,7 @@
 
       <!-- Pagination  -->
       <div class="px-4 py-3 sm:px-6">
-        {{ $users->links() }}
+        {{ $roles->links() }}
       </div>  
 
     </div>

@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\FeatureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +26,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 
-Route::resource('user', UserController::class);
+Route::resource('users', UserController::class);
+Route::resource('permissions', PermissionController::class);
+Route::resource('roles', RoleController::class);
+Route::resource('features', FeatureController::class);
 
 require __DIR__.'/auth.php';

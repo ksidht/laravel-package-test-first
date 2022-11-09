@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Validator;
 use App\Models\User;
-use App\Http\Requests\StoreValRequest;
+use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\UpdateValRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request as RequestStatic;
 
 class UserController extends Controller
 {
@@ -18,6 +19,19 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+
+        $users = User::orderBy('id')
+                ->filter(RequestStatic::only('search', 'trashed'))
+                ->paginate(5)
+                ->withQueryString();
+        
+        return view('adminusers.index', compact('users'));      
+        
+        /* 
+        *  NEED TO REVIEW FOLLOWING CODE
+        *  1. Use if require or delete it
+        */
+
         $user_query = User::with([]);
 
         // if search keywork is present
@@ -55,15 +69,9 @@ class UserController extends Controller
             $user_query->onlyTrashed();
         }
 
-        // if paginate is present
-        if ($request->paginate) {
-            $user = $user_query->orderBy($sortBy, $sortOrder)->paginate($perPage);
-        } else if ($request->simplePaginate) {
-            $user = $user_query->orderBy($sortBy, $sortOrder)->simplePaginate($perPage);
-        } else {
-            $user = $user_query->orderBy($sortBy, $sortOrder)->get();
-        }
+        $user = $user_query->orderBy($sortBy, $sortOrder)->paginate($perPage);
 
+        // dd($user);
 
         // return response()->success($user);
         return view('adminusers.index', compact('user'));
@@ -85,20 +93,11 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreValRequest $request)
+    public function store(UserStoreRequest $request)
     {
-        DB::beginTransaction();
-        try {
-            $userData = User::create($request->validated());
-            DB::commit();
+        User::create($request->validated());
 
-            return redirect()->route('user.index');
-
-            // return response()->success($userData);
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return response()->error($th, 500);
-        }
+        return redirect()->route('user.index');
     }
 
     /**
@@ -132,16 +131,9 @@ class UserController extends Controller
      */
     public function update(UpdateValRequest $request, User $user)
     {
-        DB::beginTransaction();
-        try {
-            $user->update($request->validated());
-            DB::commit();
-            // return response()->success($user);
-            return redirect()->route('user.index');
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return response()->error($th, 500);
-        }
+        $user->update($request->validated());
+
+        return redirect()->route('user.index');
     }
 
     /**
@@ -152,15 +144,17 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        DB::beginTransaction();
-        try {
-            $user->delete();
-            DB::commit();
-            // return response()->success($user);
-            return redirect()->route('user.index');
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return response()->error($th, 500);
-        }
+        $user->delete();
+
+        return redirect()->route('user.index');
+
     }
+
+    public function restore(User $user)
+    {
+        $organization->restore();
+
+        return redirect()->route('user.index');
+    }
+
 }
