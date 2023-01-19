@@ -34,7 +34,6 @@
         <script src="https://js.stripe.com/v3/"></script>
 
         <script>
-            console.log(sid)
             const stripe = Stripe('pk_test_51M1nmLSA8qqKU7LU7UckY4vtW2uJ7CBB9v8gGt3vAjoUaxNTre0MA2Tg2jCirtKge2q1l8nQ1FxFt2e1YNaYDG9V00nv9vxnlV');
 
             const elements = stripe.elements();
